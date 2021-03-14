@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_home_24"
+        android:title="home"/>
+    <item
+        android:id="@+id/scheduleFragment"
+        android:enabled="true"
+        android:icon="@drawable/date"
+        android:title="schedule"/>
+    <item
+        android:id="@+id/weatherFragment"
+        android:enabled="true"
+        android:icon="@drawable/cloudy"
+        android:title="weather"/>
+    <item
+        android:id="@+id/dishFragment"
+        android:enabled="true"
+        android:icon="@drawable/dish"
+        android:title="dish"/>
+    <item
+        android:id="@+id/personalFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_person_outline_24"
+        android:title="personal"/>
+</menu>
