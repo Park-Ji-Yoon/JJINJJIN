@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
 
+    implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+
 
     // bottom navigation bar
 //    implementation 'com.google.android.material:material:1.0.0'}
