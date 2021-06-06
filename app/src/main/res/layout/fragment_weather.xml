@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".WeatherFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:hint="학교 위치를 입력해주세요" />
+
+        <ImageButton
+            android:id="@+id/search"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:background="#ffffff"
+            android:src="@drawable/ic_search" />
+    </LinearLayout>
+
     <TextView
+        android:id="@+id/result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="weather" />
-
-</FrameLayout>
+        android:gravity="center"
+        android:text="x / y 값" />
+</LinearLayout>
