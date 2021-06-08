@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -19,6 +19,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +37,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DishFragment extends Fragment {
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private static final String TAG = "FragmentIndividual";
+
+    Button withdrawal;
+    FirebaseAuth firebaseAuth;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -74,23 +87,56 @@ public class DishFragment extends Fragment {
 //        btnSchoolName = view.findViewById(R.id.btnSchoolname);
 //        edSchoolName = view.findViewById(R.id.edSchoolName);
 
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         SimpleDateFormat mFormat = new SimpleDateFormat("yyyyMMdd");
         today = mFormat.format(cal.getTime());
         cal.add(Calendar.DATE, 1);
         tomorrow = mFormat.format(cal.getTime());
 
-        getStudentDish("B10", "7010569");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Log.e("user : ", user.getUid());
+            Log.e("user : ", user.getEmail());
+        } else {
+            Log.d("else : ", "get failed with 3");
+        }
 
-//        btnSchoolName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(edSchoolName.getText() != null) {
-//                    getSchoolCode();
-//                }
-//            }
-//        });
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            int weekday = cal.get(Calendar.DAY_OF_WEEK);
+//                            if(weekday == 1 || weekday == 7){
+//                                cardView01.setText("오늘은 급식이 없습니다.");
+//                                cardView02.setVisibility(View.GONE);
+//                                cardView03.setVisibility(View.GONE);
+//                            }
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 급식", Locale.getDefault()).format(currentTime);
+                            tvDate.setText(date_text);
+                            tvSchoolName.setText(document.getData().get("school").toString());
+                            getStudentDish(document.getData().get("eduCode").toString(), document.getData().get("schoolCode").toString());
+                            Log.e("school : ", document.getData().get("school").toString());
+                            Log.e("eduCode : ", document.getData().get("eduCode").toString());
+                            Log.e("schoolCode : ", document.getData().get("schoolCode").toString());
+                        } else {
+                            Log.d("else : ", "No such document1");
+                        }
+                    }else{
+                        Log.d("else : ", "No such document2");
+                    }
+                } else {
+                    Log.d("else : ", "get failed with ", task.getException());
+                }
+            }
+        });
+
+//        getStudentDish("B10", "7010569");
 
         return view;
     }
@@ -148,11 +194,6 @@ public class DishFragment extends Fragment {
                     for(int i=0; i<dinner_arr.length; i++) {
                         dinner_result += dinner_arr[i] + "\n";
                     }
-
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 급식", Locale.getDefault()).format(currentTime);
-                    tvDate.setText(date_text);
-                    tvSchoolName.setText(school_name);
                     cardView01.setText(breakfast_result);
                     cardView02.setText(lunch_result);
                     cardView03.setText(dinner_result);
@@ -169,50 +210,5 @@ public class DishFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(now_stringRequest);
-    }
-    public String[] getSchoolCode(){
-        String nowtempUrl = "";
-        String dish_url = "https://open.neis.go.kr/hub/schoolInfo";
-        final String[] school_code = {"", ""};
-
-        nowtempUrl = dish_url + "?Type=" + "json"
-                + "&pIndex=" + "1"
-                + "&pSize=" + "100"
-                + "&KEY=" + "7c47d7824e0d4a0eb908d2c186de56f1"
-                + "&SCHUL_NM=" + edSchoolName.getText();
-
-        StringRequest now_stringRequest = new StringRequest(Request.Method.POST, nowtempUrl, new Response.Listener<String>() {
-            @Nullable
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray mealServiceDietInfo = jsonResponse.getJSONArray("schoolInfo");
-                    JSONObject body = mealServiceDietInfo.getJSONObject(1);
-                    JSONArray body_array = body.getJSONArray("row");
-                    JSONObject dish = body_array.getJSONObject(0);
-                    school_code[0] = dish.getString("ATPT_OFCDC_SC_CODE");
-                    school_code[1] = dish.getString("SD_SCHUL_CODE");
-
-                    Log.e("school_edu", school_code[0]);
-                    Log.e("school_code", school_code[1]);
-
-//                    tvResult2.setText(school_code[0] + " " + school_code[1]);
-
-                    getStudentDish(school_code[0], school_code[1]);
-
-                }catch(JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(now_stringRequest);
-        return school_code;
     }
 }
