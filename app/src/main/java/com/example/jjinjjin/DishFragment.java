@@ -5,8 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,23 +39,20 @@ public class DishFragment extends Fragment {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String TAG = "FragmentIndividual";
 
-    Button withdrawal;
-    FirebaseAuth firebaseAuth;
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
 
-    TextView tvDate;
-    TextView tvSchoolName;
-    TextView cardView01;
-    TextView cardView02;
-    TextView cardView03;
     View view;
-    Button btnSchoolName;
-    EditText edSchoolName;
+
+    TextView schoolName;
+    TextView todayDate;
+
+    TextView breakfast;
+    TextView lunch;
+    TextView dinner;
 
     String today;
     String tomorrow;
@@ -78,14 +73,13 @@ public class DishFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_dish, container, false);
-        tvDate = view.findViewById(R.id.tvDate);
-        tvSchoolName = view.findViewById(R.id.tvSchoolName);
-        cardView01 = view.findViewById(R.id.info_text01);
-        cardView02 = view.findViewById(R.id.info_text02);
-        cardView03 = view.findViewById(R.id.info_text03);
-//        tvDish = view.findViewById(R.id.tvDish);
-//        btnSchoolName = view.findViewById(R.id.btnSchoolname);
-//        edSchoolName = view.findViewById(R.id.edSchoolName);
+
+        todayDate = view.findViewById(R.id.todayDate);
+        schoolName = view.findViewById(R.id.schoolName);
+
+        breakfast = view.findViewById(R.id.breakfast);
+        lunch = view.findViewById(R.id.lunch);
+        dinner = view.findViewById(R.id.dinner);
 
         final Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -117,9 +111,9 @@ public class DishFragment extends Fragment {
 //                                cardView03.setVisibility(View.GONE);
 //                            }
                             Date currentTime = Calendar.getInstance().getTime();
-                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 급식", Locale.getDefault()).format(currentTime);
-                            tvDate.setText(date_text);
-                            tvSchoolName.setText(document.getData().get("school").toString());
+                            String date_text = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(currentTime);
+                            todayDate.setText(date_text);
+                            schoolName.setText(document.getData().get("school").toString());
                             getStudentDish(document.getData().get("eduCode").toString(), document.getData().get("schoolCode").toString());
                             Log.e("school : ", document.getData().get("school").toString());
                             Log.e("eduCode : ", document.getData().get("eduCode").toString());
@@ -136,7 +130,7 @@ public class DishFragment extends Fragment {
             }
         });
 
-//        getStudentDish("B10", "7010569");
+        getStudentDish("B10", "7010569");
 
         return view;
     }
@@ -168,13 +162,13 @@ public class DishFragment extends Fragment {
                     JSONArray mealServiceDietInfo = jsonResponse.getJSONArray("mealServiceDietInfo");
                     JSONObject body = mealServiceDietInfo.getJSONObject(1);
                     JSONArray body_array = body.getJSONArray("row");
-                    JSONObject breakfast = body_array.getJSONObject(0);
-                    JSONObject lunch = body_array.getJSONObject(1);
-                    JSONObject dinner = body_array.getJSONObject(2);
-                    String school_name = breakfast.getString("SCHUL_NM");
-                    String breakfast_menu = breakfast.getString("DDISH_NM");
-                    String lunch_menu = lunch.getString("DDISH_NM");
-                    String dinner_menu = dinner.getString("DDISH_NM");
+                    JSONObject breakfastObj = body_array.getJSONObject(0);
+                    JSONObject lunchObj = body_array.getJSONObject(1);
+                    JSONObject dinnerObj = body_array.getJSONObject(2);
+                    String school_name = breakfastObj.getString("SCHUL_NM");
+                    String breakfast_menu = breakfastObj.getString("DDISH_NM");
+                    String lunch_menu = lunchObj.getString("DDISH_NM");
+                    String dinner_menu = dinnerObj.getString("DDISH_NM");
                     String[] breakfast_arr = breakfast_menu.split("<br/>");
                     String[] lunch_arr = lunch_menu.split("<br/>");
                     String[] dinner_arr = dinner_menu.split("<br/>");
@@ -194,9 +188,9 @@ public class DishFragment extends Fragment {
                     for(int i=0; i<dinner_arr.length; i++) {
                         dinner_result += dinner_arr[i] + "\n";
                     }
-                    cardView01.setText(breakfast_result);
-                    cardView02.setText(lunch_result);
-                    cardView03.setText(dinner_result);
+                    breakfast.setText(breakfast_result);
+                    lunch.setText(lunch_result);
+                    dinner.setText(dinner_result);
 
                 }catch(JSONException e) {
                     e.printStackTrace();
