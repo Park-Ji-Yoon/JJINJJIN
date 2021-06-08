@@ -1,42 +1,48 @@
 package com.example.jjinjjin;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PersonalFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
 public class PersonalFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    //파이어스토어에 접근하기 위한 객체를 생성한다.
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    View view;
+
+    TextView name;
+    TextView school;
+    TextView eduCode;
+    TextView schoolCode;
+
     public PersonalFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PersonalFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static PersonalFragment newInstance(String param1, String param2) {
         PersonalFragment fragment = new PersonalFragment();
         Bundle args = new Bundle();
@@ -56,9 +62,41 @@ public class PersonalFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_personal, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_personal, container, false);
+
+        name = view.findViewById(R.id.name);
+        school = view.findViewById(R.id.school);
+        eduCode = view.findViewById(R.id.eduCode);
+        schoolCode = view.findViewById(R.id.schoolCode);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("파베", "DocumentSnapshot data: " + document.getData());
+                        Log.d("파베이름", "DocumentSnapshot data: " + document.getData().get("name").toString());
+                        Log.d("파베이름", "DocumentSnapshot data: " + document.getData().get("school").toString());
+                        name.setText(document.getData().get("name").toString());
+                        school.setText(document.getData().get("school").toString());
+                        eduCode.setText(document.getData().get("eduCode").toString());
+                        schoolCode.setText(document.getData().get("schoolCode").toString());
+                    } else {
+                        Log.d("파베", "No such document");
+                    }
+                } else {
+                    Log.d("파베", "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+        return view;
     }
 }
