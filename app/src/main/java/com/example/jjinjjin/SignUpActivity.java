@@ -96,7 +96,6 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
                                     Log.d("SignUp","이메일 비번 저장성공");
                                     // startToast("회원가입을 성공했습니다!");
                                     //UI
@@ -114,11 +113,12 @@ public class SignUpActivity extends AppCompatActivity {
                 startToast("비밀번호가 일치하지 않습니다.");
             }
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String docName = email.split("@")[0];
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1]);
 
-            db.collection("users").document(user.getUid()).set(memberInfo)
+            db.collection("users").document(docName)
+                    .set(memberInfo.getHash())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
