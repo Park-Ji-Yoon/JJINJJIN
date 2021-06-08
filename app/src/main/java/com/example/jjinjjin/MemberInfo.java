@@ -1,5 +1,8 @@
 package com.example.jjinjjin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MemberInfo {
     private String name;
     private String school;
@@ -44,5 +47,14 @@ public class MemberInfo {
     }
     public void setEduCode(String eduCode) {
         this.eduCode = eduCode;
+    }
+
+    public Map<String, Object> getHash(){
+        Map<String, Object> member = new HashMap<>();
+        member.put("name", getName());
+        member.put("school", getSchool());
+        member.put("schoolcode", getSchoolCode());
+        member.put("educode", getEduCode());
+        return member;
     }
 }
