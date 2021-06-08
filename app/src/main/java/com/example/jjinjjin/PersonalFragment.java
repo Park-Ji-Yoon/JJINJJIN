@@ -67,8 +67,8 @@ public class PersonalFragment extends Fragment {
 
         name = view.findViewById(R.id.name);
         school = view.findViewById(R.id.school);
-        eduCode = view.findViewById(R.id.eduCode);
-        schoolCode = view.findViewById(R.id.schoolCode);
+//        eduCode = view.findViewById(R.id.eduCode);
+//        schoolCode = view.findViewById(R.id.schoolCode);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
