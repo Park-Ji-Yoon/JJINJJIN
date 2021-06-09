@@ -1,10 +1,5 @@
 package com.example.jjinjjin;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.usage.NetworkStats;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,7 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -113,11 +111,11 @@ public class SignUpActivity extends AppCompatActivity {
                 startToast("비밀번호가 일치하지 않습니다.");
             }
 
-            String docName = email.split("@")[0];
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1]);
 
-            db.collection("users").document(docName)
+            db.collection("users").document(user.getUid())
                     .set(memberInfo.getHash())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

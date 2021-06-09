@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="계정 설정"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:layout_marginBottom="50dp"/>
+
+    <!-- 이름-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이름"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/account_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@gmail.com"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 이메일-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이메일"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/account_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@gmail.com"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 학교명-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="학교명"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/account_school"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@gmail.com"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 학교 코드-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="학교 코드"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/account_school_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@gmail.com"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 교육청 코드-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="교육청 코드"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/account_edu_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@gmail.com"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/pw_change_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 변경"
+        android:background="@drawable/radius"
+        android:textColor="#ffffff"
+        android:backgroundTint="#4285F4"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

@@ -1,10 +1,12 @@
 package com.example.jjinjjin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,8 +38,12 @@ public class PersonalFragment extends Fragment {
 
     TextView name;
     TextView school;
-    TextView eduCode;
-    TextView schoolCode;
+
+    Button accountBtn;
+    Button schoolBtn;
+    Button alarmBtn;
+    Button logoutBtn;
+    Button leaveBtn;
 
     public PersonalFragment() {
 
@@ -67,11 +73,17 @@ public class PersonalFragment extends Fragment {
 
         name = view.findViewById(R.id.name);
         school = view.findViewById(R.id.school);
-//        eduCode = view.findViewById(R.id.eduCode);
-//        schoolCode = view.findViewById(R.id.schoolCode);
+
+        accountBtn = view.findViewById(R.id.accountBtn);
+        schoolBtn = view.findViewById(R.id.schoolBtn);
+        alarmBtn = view.findViewById(R.id.alarmBtn);
+        logoutBtn = view.findViewById(R.id.logoutBtn);
+        leaveBtn = view.findViewById(R.id.leaveBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+
+        Log.d("유아이디", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -79,23 +91,56 @@ public class PersonalFragment extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    Log.d("도큐먼트ㅡ", document.toString());
                     if (document.exists()) {
-                        Log.d("파베", "DocumentSnapshot data: " + document.getData());
-                        Log.d("파베이름", "DocumentSnapshot data: " + document.getData().get("name").toString());
-                        Log.d("파베이름", "DocumentSnapshot data: " + document.getData().get("school").toString());
                         name.setText(document.getData().get("name").toString());
                         school.setText(document.getData().get("school").toString());
-                        eduCode.setText(document.getData().get("eduCode").toString());
-                        schoolCode.setText(document.getData().get("schoolCode").toString());
                     } else {
-                        Log.d("파베", "No such document");
+                        Log.d("Firebase", "No such document");
                     }
                 } else {
-                    Log.d("파베", "get failed with ", task.getException());
+                    Log.d("Firebase", "get failed with ", task.getException());
                 }
             }
         });
 
+        accountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AccountActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        schoolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SchoolActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        alarmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AlarmActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        leaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         return view;
     }
