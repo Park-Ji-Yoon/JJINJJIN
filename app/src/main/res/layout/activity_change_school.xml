@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ChangeSchoolActivity"
+    android:padding="50dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="학교 재설정"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:layout_marginBottom="50dp"/>
+
+    <EditText
+        android:id="@+id/schoolEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:ems="10"
+        android:hint="학교"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/schoolSearchBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="학교 검색"
+        android:background="@drawable/radius_white"
+        android:textColor="#4285F4"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/navText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="학교 검색을 해주세요"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/previous_school"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/new_school"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/change_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="재설정하기"
+        android:background="@drawable/radius"
+        android:textColor="#ffffff"
+        android:backgroundTint="#4285F4"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

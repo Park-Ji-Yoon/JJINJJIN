@@ -1,9 +1,12 @@
 package com.example.jjinjjin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,7 +74,8 @@ public class AccountActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        startToast("이메일을 전송되었습니다. 이메일을 확인해주세요");
+                                        Intent intent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
+                                        startActivity(intent);
                                     }
                                 }
                             });
