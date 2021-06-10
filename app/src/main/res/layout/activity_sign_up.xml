@@ -4,18 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".LoginActivity"
+    android:background="#F5F5F5"
+    android:padding="30dp">
+    <!--    -->
+    <!--    <Button-->
+    <!--        android:id="@+id/gotoHome"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content" />-->
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_weight="0"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="회원가입"
-        android:textColor="#000000"
+        android:textColor="#4285F4"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="안녕하십니까 환영합니다"
+        android:textColor="#7D7D7D"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,27 +47,50 @@
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="이름"
-            android:inputType="textPersonName" />
+            android:background="@drawable/edittext"
+            android:padding="10dp"
+            android:inputType="textEmailAddress" />
+
         <EditText
             android:id="@+id/schoolEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="학교"
-            android:inputType="textPersonName" />
+            android:hint="학교명"
+            android:background="@drawable/edittext"
+            android:padding="10dp"
+            android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/schoolSearchBtn"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="학교 검색"/>
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="도시"
+            android:background="@drawable/edittext"
+            android:padding="10dp"
+            android:inputType="textPassword" />
 
         <TextView
-            android:id="@+id/navText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="학교 검색을 해주세요"/>
+            android:text="학교검색을 해주세요"
+            android:textColor="#7D7D7D"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="학교 검색하기"
+            android:textSize="20sp"
+            android:textColor="#4285F4"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/radius_white"
+            android:padding="6dp"/>
 
         <EditText
             android:id="@+id/emailEditText"
@@ -60,6 +99,8 @@
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="이메일"
+            android:background="@drawable/edittext"
+            android:padding="10dp"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -69,21 +110,31 @@
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="비밀번호"
-            android:inputType="textPassword" />
+            android:background="@drawable/edittext"
+            android:padding="10dp"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/passwordCheckEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="비밀번호 확인"
-            android:inputType="textPassword" />
+            android:background="@drawable/edittext"
+            android:padding="10dp"
+            android:inputType="textEmailAddress" />
 
         <Button
             android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="회원가입" />
+            android:text="회원가입"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/radius"
+            android:padding="12dp"/>
 
     </LinearLayout>
 </LinearLayout>
