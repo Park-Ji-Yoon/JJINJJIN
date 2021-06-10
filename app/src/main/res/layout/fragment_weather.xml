@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity ="center"
-        android:fillViewport="true"
         android:layout_marginTop="0dp"
-        android:id="@+id/scrollView">
+        android:fillViewport="true"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/top_alert"
@@ -25,38 +25,97 @@
             <StackView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:background="#FBBC05"/>
+                android:background="#FBBC05" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="학교이름"
-                android:textSize="20sp"
-                android:textColor="#ffffff"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="35dp"/>
+                android:layout_marginTop="35dp"
+                android:text="학교이름"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="65dp"
                 android:text="오늘 날씨 어때?"
                 android:textColor="#ffffff"
-                android:textSize="32sp"
-                android:layout_marginTop="65dp"
-                android:layout_marginLeft="30dp"/>
-
+                android:textSize="32sp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="350dp"
                 android:layout_height="400dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="120dp"
-                app:cardCornerRadius="10dp"
-                app:cardUseCompatPadding="true"
+                android:layout_marginBottom="40dp"
                 android:outlineAmbientShadowColor="#000000"
+                app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
-                android:layout_marginBottom="40dp">
+                app:cardUseCompatPadding="true">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/date_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:text="0000년 00월 00일 0요일"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/weather_img"
+                            android:layout_width="170dp"
+                            android:layout_height="140dp"
+                            android:src="@drawable/s1r1" />
+
+                        <TextView
+                            android:id="@+id/now_temp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="50dp"
+                            android:text="00°C"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/temp_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="00°C / 00°C\n강수 확률은 00%입니다."
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/weather_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:text="👔 오늘의 코디?\n\t\t\t\t-> 패딩, 목도리, 장갑, 기모바지"
+                        android:textSize="18sp" />
+
+
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -65,24 +124,30 @@
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="540dp"
-                app:cardCornerRadius="10dp"
-                app:cardUseCompatPadding="true"
+                android:layout_marginBottom="40dp"
                 android:outlineAmbientShadowColor="#000000"
+                app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
-                android:layout_marginBottom="40dp">
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <Button
+                    <ImageButton
+                        android:id="@+id/location_btn"
                         android:layout_width="170dp"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:background="#FBBC07"
+                        android:src="@drawable/location_white" />
 
-                    <Button
+                    <ImageButton
+                        android:id="@+id/school_btn"
                         android:layout_width="170dp"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:background="#FFFFFF"
+                        android:src="@drawable/school_yello" />
 
                 </LinearLayout>
 
