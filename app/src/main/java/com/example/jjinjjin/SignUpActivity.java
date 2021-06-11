@@ -94,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d("SignUp","이메일 비번 저장성공");
+                                    Log.v("SignUp","이메일 비번 저장성공");
                                     // startToast("회원가입을 성공했습니다!");
                                     //UI
                                 } else {
@@ -120,14 +120,15 @@ public class SignUpActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d("SignUp","회원정보 저장 성공");
+                            Log.v("SignUp","회원정보 저장 성공");
+
                             startMyActivity(MainActivity.class);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("SignUp","회원정보 저장 실패");
+                            Log.v("SignUp","회원정보 저장 실패");
                         }
                     });
 
@@ -151,6 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 startToast("회원정보가 저장되었습니다");
+                                Log.v("SignUp","회원정보 저장");
                                 startMyActivity(MainActivity.class);
                             }
                         })
@@ -158,6 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 startToast("회원정보를 저장하지 못했습니다");
+                                Log.v("SignUp","회원정보 실패");
                             }
                         });
             }

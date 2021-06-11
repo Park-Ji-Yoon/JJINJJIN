@@ -1,150 +1,102 @@
-//package com.example.jjinjjin;
-//
-//import android.os.Bundle;
-//
-//import androidx.fragment.app.Fragment;
-//
-//import android.util.Log;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.EditText;
-//import android.widget.ImageButton;
-//import android.widget.TextView;
-//import android.widget.Toast;
-//
-//import com.android.volley.Request;
-//import com.android.volley.RequestQueue;
-//import com.android.volley.Response;
-//import com.android.volley.VolleyError;
-//import com.android.volley.toolbox.StringRequest;
-//import com.android.volley.toolbox.Volley;
-//
-//import org.json.JSONArray;
-//import org.json.JSONException;
-//import org.json.JSONObject;
-//
-//import java.io.IOException;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-//
-//import jxl.Sheet;
-//import jxl.Workbook;
-//import jxl.read.biff.BiffException;
-//
-///**
-// * A simple {@link Fragment} subclass.
-// * Use the {@link WeatherFragment#newInstance} factory method to
-// * create an instance of this fragment.
-// */
-//public class WeatherFragment extends Fragment {
-//
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
-//
-//    EditText location;
-//    ImageButton search;
-//    TextView result;
-//
-//    String result_x = "", result_y = "";
-//
-//    public WeatherFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment WeatherFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static WeatherFragment newInstance(String param1, String param2) {
-//        WeatherFragment fragment = new WeatherFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_weather, container, false);
-//
-//        location = getView().findViewById(R.id.location);
-//        search = getView().findViewById(R.id.search);
-//        result = getView().findViewById(R.id.result);
-//
-//        search.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(location.getText().toString().equals("")){
-//                    Toast.makeText(container.getContext(), "학교 위치를 입력해주세요", Toast.LENGTH_SHORT).show();
-//                }else{
-//                    FindXY(location.getText().toString());
-//                    getWeather(result_x, result_y);
-//                }
-//            }
-//        });
-//
-//        return view;
-//    }
-//
-//    private void FindXY(String location_txt) {
-//        try{
-//            Workbook wb = Workbook.getWorkbook(getActivity().getBaseContext().getResources().getAssets().open("location.xls"));
-//
-//            if(wb != null) {
-//                Sheet sheet = wb.getSheet(0);
-//                if (sheet != null) {
-//                    int colTotal = sheet.getColumns();
-//                    int rowTotal = sheet.getColumn(colTotal - 1).length;
-//
-//                    for (int row = 0; row < rowTotal; row++) {
-//                        for (int col = 1; col < colTotal; col++) {
-//                            if (location_txt.equals(sheet.getCell(col, row).getContents())) {
-//                                result_x = sheet.getCell(3, row).getContents();
-//                                result_y = sheet.getCell(4, row).getContents();
-//                            }
-//                        }
-//                    }
-//                    if (result_x == "" || result_y == "") {
-//                        Toast.makeText(getContext(), "학교 위치를 다시 입력해주세요", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Log.d("시트 오류 : ", location_txt + "찾을 수 없음");
-//                }
-//            }else{
-//                Log.d("엑셀 오류 : ", location_txt + "찾을 수 없음");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (BiffException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
+package com.example.jjinjjin;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
+public class WeatherActivity extends AppCompatActivity {
+
+    EditText location;
+    ImageButton search;
+    TextView result;
+
+    String result_x = "", result_y = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        location = findViewById(R.id.location);
+        search = findViewById(R.id.search);
+        result = findViewById(R.id.result);
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(location.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "학교 위치를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }else{
+                    FindXY(location.getText().toString());
+                    //getWeather(result_x, result_y);
+                }
+            }
+        });
+
+    }
+
+    private void FindXY(String location_txt) {
+        try{
+            Workbook wb = Workbook.getWorkbook(getBaseContext().getResources().getAssets().open("location.xls"));
+
+            if(wb != null) {
+                Sheet sheet = wb.getSheet(0);
+                if (sheet != null) {
+                    int colTotal = sheet.getColumns();
+                    int rowTotal = sheet.getColumn(colTotal - 1).length;
+
+                    for (int row = 0; row < rowTotal; row++) {
+                        for (int col = 1; col < colTotal; col++) {
+                            if (location_txt.equals(sheet.getCell(col, row).getContents())) {
+                                result_x = sheet.getCell(3, row).getContents();
+                                result_y = sheet.getCell(4, row).getContents();
+                            }
+                        }
+                    }
+                    if (result_x == "" || result_y == "") {
+                        Toast.makeText(getApplicationContext(), "학교 위치를 다시 입력해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("시트 오류 : ", location_txt + "찾을 수 없음");
+                }
+            }else{
+                Log.d("엑셀 오류 : ", location_txt + "찾을 수 없음");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 //    public void  getWeather(String x, String y) {
 //        final String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst?serviceKey=FXg%2Ft9dxkuprU0w78fsjMQ6UuJka073zQlNU1CPrvzyR1ktiy4Pg7BbitEdn%2FwYeaVJ6oZmiJdgFuKeBVMqO2g%3D%3D&pageNo=1&numOfRows=62&dataType=JSON&base_date=";
 //        String ymd = "";
@@ -162,7 +114,7 @@
 //            weatherUrl = url + ymd + url_end924;
 //        }
 //
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, weatherUrl, new Response.Listener<String>() {
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, weatherUrl, new Response.Listener<String>() {
 //            @Override
 //            public void onResponse(String response) {
 //                try{
@@ -280,10 +232,10 @@
 //        }, new Response.ErrorListener() {
 //            @Override
 //            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
-//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 //        requestQueue.add(stringRequest);
 //    }
-//}
+}

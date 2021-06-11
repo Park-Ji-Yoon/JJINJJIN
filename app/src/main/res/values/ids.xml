@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <item name="tvDate" type="id">tvDate</item>-->
+<!--    <item name="tvSchoolName" type="id">tvSchoolName</item>-->
+<!--    <item name="card_view01" type="id">card_view01</item>-->
+<!--    <item name="info_text01" type="id">info_text01</item>-->
+<!--    <item name="card_view02" type="id">card_view02</item>-->
+<!--    <item name="info_text02" type="id">info_text02</item>-->
+<!--    <item name="card_view03" type="id">card_view03</item>-->
+<!--    <item name="info_text03" type="id">info_text03</item>-->
+
+    <item name="tvDate" type="id"/>
+    <item name="tvSchoolName" type="id"/>
+    <item name="card_view01" type="id"/>
+    <item name="info_text01" type="id"/>
+    <item name="card_view02" type="id"/>
+    <item name="info_text02" type="id"/>
+    <item name="card_view03" type="id"/>
+    <item name="info_text03" type="id"/>
+</resources>
