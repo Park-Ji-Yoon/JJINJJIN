@@ -114,10 +114,18 @@ public class DishFragment extends Fragment {
                             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(currentTime);
                             todayDate.setText(date_text);
                             schoolName.setText(document.getData().get("school").toString());
-                            getStudentDish(document.getData().get("eduCode").toString(), document.getData().get("schoolCode").toString());
+                            String edu = "";
+                            String cod = "";
+                            try{
+                                edu = document.getData().get("eduCode").toString();
+                                cod = document.getData().get("schoolCode").toString();
+                            }catch (NullPointerException e){
+                                Log.d("NullPointerException", e.toString());
+                            }
+                            getStudentDish(edu, cod);
                             Log.e("school : ", document.getData().get("school").toString());
-                            Log.e("eduCode : ", document.getData().get("eduCode").toString());
-                            Log.e("schoolCode : ", document.getData().get("schoolCode").toString());
+                            Log.e("eduCode : ", document.getData().get("educode").toString());
+                            Log.e("schoolCode : ", document.getData().get("schoolcode").toString());
                         } else {
                             Log.d("else : ", "No such document1");
                         }
@@ -159,21 +167,63 @@ public class DishFragment extends Fragment {
                 try{
 //                    https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=T10&SD_SCHUL_CODE=9296071&MLSV_FROM_YMD=20210411&MLSV_TO_YMD=20210413
                     JSONObject jsonResponse = new JSONObject(response);
+                    Log.d("급쉭", jsonResponse.toString());
                     JSONArray mealServiceDietInfo = jsonResponse.getJSONArray("mealServiceDietInfo");
                     JSONObject body = mealServiceDietInfo.getJSONObject(1);
                     JSONArray body_array = body.getJSONArray("row");
-                    JSONObject breakfastObj = body_array.getJSONObject(0);
-                    JSONObject lunchObj = body_array.getJSONObject(1);
-                    JSONObject dinnerObj = body_array.getJSONObject(2);
-                    String school_name = breakfastObj.getString("SCHUL_NM");
-                    String breakfast_menu = breakfastObj.getString("DDISH_NM");
-                    String lunch_menu = lunchObj.getString("DDISH_NM");
-                    String dinner_menu = dinnerObj.getString("DDISH_NM");
-                    String[] breakfast_arr = breakfast_menu.split("<br/>");
-                    String[] lunch_arr = lunch_menu.split("<br/>");
-                    String[] dinner_arr = dinner_menu.split("<br/>");
 
-                    Log.e("breakfast_menu : ", breakfast_menu);
+                    String[] breakfast_arr = null;
+                    String[] lunch_arr = null;
+                    String[] dinner_arr = null;
+
+                    switch(body_array.length()){
+                        case 0:
+                            break;
+                        case 1:
+                            JSONObject obj = body_array.getJSONObject(0);
+                            if(obj.getString("MMEAL_SC_NM") == "조식"){
+                                breakfast_arr = obj.getString("DDISH_NM").split("<br/>");
+                            }else if(obj.getString("MMEAL_SC_NM") == "중식"){
+                                lunch_arr = obj.getString("DDISH_NM").split("<br/>");
+                            }else if(obj.getString("MMEAL_SC_NM") == "석식"){
+                                dinner_arr = obj.getString("DDISH_NM").split("<br/>");
+                            }
+                            break;
+                        case 2:
+                            JSONObject obj0 = body_array.getJSONObject(0);
+                            JSONObject obj1 = body_array.getJSONObject(1);
+                            if(obj0.getString("MMEAL_SC_NM") == "조식"){
+                                breakfast_arr = obj0.getString("DDISH_NM").split("<br/>");
+                                if(obj1.getString("MMEAL_SC_NM") == "석식") {
+                                    dinner_arr = obj1.getString("DDISH_NM").split("<br/>");
+                                }else {
+                                    lunch_arr = obj1.getString("DDISH_NM").split("<br/>");
+                                }
+                            }else if(obj0.getString("MMEAL_SC_NM") == "중식"){
+                                lunch_arr = obj0.getString("DDISH_NM").split("<br/>");
+                                dinner_arr = obj1.getString("DDISH_NM").split("<br/>");
+                            }
+                            break;
+                        case 3:
+                            breakfast_arr = body_array.getJSONObject(0).getString("DDISH_NM").split("<br/>");
+                            lunch_arr = body_array.getJSONObject(1).getString("DDISH_NM").split("<br/>");
+                            dinner_arr = body_array.getJSONObject(2).getString("DDISH_NM").split("<br/>");
+                            break;
+                        default:
+                            break;
+                    }
+//                    JSONObject breakfastObj = body_array.getJSONObject(0);
+//                    JSONObject lunchObj = body_array.getJSONObject(1);
+//                    JSONObject dinnerObj = body_array.getJSONObject(2);
+//                    String school_name = breakfastObj.getString("SCHUL_NM");
+//                    String breakfast_menu = breakfastObj.getString("DDISH_NM");
+//                    String lunch_menu = lunchObj.getString("DDISH_NM");
+//                    String dinner_menu = dinnerObj.getString("DDISH_NM");
+//                    String[] breakfast_arr = breakfast_menu.split("<br/>");
+//                    String[] lunch_arr = lunch_menu.split("<br/>");
+//                    String[] dinner_arr = dinner_menu.split("<br/>");
+
+//                    Log.e("breakfast_menu : ", breakfast_menu);
 
                     String breakfast_result = "";
                     String lunch_result = "";
@@ -191,7 +241,7 @@ public class DishFragment extends Fragment {
                     breakfast.setText(breakfast_result);
                     lunch.setText(lunch_result);
                     dinner.setText(dinner_result);
-
+                    Log.d("아췸", breakfast_result);
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }

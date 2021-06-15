@@ -60,7 +60,7 @@
             android:hint="학교명"
             android:background="@drawable/edittext"
             android:padding="10dp"
-            android:inputType="textPassword" />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/cityEditText"
@@ -74,6 +74,7 @@
             android:inputType="textPassword" />
 
         <TextView
+            android:id="@+id/navText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="학교검색을 해주세요"
@@ -82,6 +83,7 @@
             android:layout_gravity="center_vertical"/>
 
         <Button
+            android:id="@+id/schoolSearchBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="학교 검색하기"
@@ -112,7 +114,7 @@
             android:hint="비밀번호"
             android:background="@drawable/edittext"
             android:padding="10dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/passwordCheckEditText"
@@ -123,7 +125,7 @@
             android:hint="비밀번호 확인"
             android:background="@drawable/edittext"
             android:padding="10dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/signUpButton"
