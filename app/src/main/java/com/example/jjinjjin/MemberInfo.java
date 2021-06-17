@@ -6,16 +6,18 @@ import java.util.Map;
 public class MemberInfo {
     private String name;
     private String school;
-//    private String ooe_code;
     private String schoolCode;
     private String eduCode;
+    private String city;
+    private String sigungu;
 
-    public MemberInfo(String name, String school, String schoolCode, String eduCode){
+    public MemberInfo(String name, String school, String schoolCode, String eduCode, String city, String sigungu){
         this.name = name;
         this.school = school;
-//        this.ooe_code = ooe_code;
         this.schoolCode = schoolCode;
         this.eduCode = eduCode;
+        this.city = city;
+        this.sigungu = sigungu;
     }
 
     public String getName() {
@@ -30,12 +32,6 @@ public class MemberInfo {
     public void setSchool(String school) {
         this.school = school;
     }
-//    public String getOoe_code() {
-//        return ooe_code;
-//    }
-//    public void setOoe_code(String ooe_code) {
-//        this.ooe_code = ooe_code;
-//    }
     public String getSchoolCode() {
         return schoolCode;
     }
@@ -48,6 +44,11 @@ public class MemberInfo {
     public void setEduCode(String eduCode) {
         this.eduCode = eduCode;
     }
+    public String getCity() { return city;}
+    public void setCity(String city) { this.city = city; }
+    public String getSigungu() { return sigungu; }
+    public void setSigungu(String sigungu) { this.sigungu = sigungu; }
+
 
     public Map<String, Object> getHash(){
         Map<String, Object> member = new HashMap<>();
@@ -55,6 +56,8 @@ public class MemberInfo {
         member.put("school", getSchool());
         member.put("schoolcode", getSchoolCode());
         member.put("educode", getEduCode());
+        member.put("city",getCity());
+        member.put("sigungu", getSigungu());
         return member;
     }
 }
