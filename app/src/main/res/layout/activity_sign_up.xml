@@ -62,17 +62,6 @@
             android:padding="10dp"
             android:inputType="text" />
 
-        <EditText
-            android:id="@+id/cityEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:ems="10"
-            android:hint="도시"
-            android:background="@drawable/edittext"
-            android:padding="10dp"
-            android:inputType="textPassword" />
-
         <TextView
             android:id="@+id/navText"
             android:layout_width="wrap_content"
@@ -94,16 +83,35 @@
             android:background="@drawable/radius_white"
             android:padding="6dp"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spin_city"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spin_sigungu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:background="@drawable/edittext"
             android:ems="10"
             android:hint="이메일"
-            android:background="@drawable/edittext"
-            android:padding="10dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:padding="10dp" />
 
         <EditText
             android:id="@+id/passwordEditText"
