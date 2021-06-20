@@ -8,11 +8,6 @@
     tools:context=".LoginActivity"
     android:background="#F5F5F5"
     android:padding="30dp">
-<!--    -->
-<!--    <Button-->
-<!--        android:id="@+id/gotoHome"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content" />-->
 
     <TextView
         android:layout_width="match_parent"
@@ -81,6 +76,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/findPW"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="비밀번호 찾기"
@@ -111,6 +107,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/noAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="회원가입"

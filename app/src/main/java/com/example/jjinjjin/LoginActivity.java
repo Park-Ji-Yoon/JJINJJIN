@@ -21,6 +21,10 @@ public class LoginActivity extends AppCompatActivity {
     Button  mLoginBtn;
     TextView mResigettxt;
     EditText mEmailText, mPasswordText;
+
+    TextView findPw;
+    TextView noAccount;
+
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -28,14 +32,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        Button gotoHome = findViewById(R.id.gotoHome);
-//        gotoHome.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        findPw = findViewById(R.id.findPW);
+        noAccount = findViewById(R.id.noAccount);
+
+        findPw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        noAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
         firebaseAuth =  FirebaseAuth.getInstance();
         //버튼 등록하기

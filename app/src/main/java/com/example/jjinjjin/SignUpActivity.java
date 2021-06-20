@@ -89,8 +89,13 @@ public class SignUpActivity extends AppCompatActivity {
                 case R.id.schoolSearchBtn: 
                     String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
                     schoolInfo = getSchoolCode(school);
-                    isClickedSearchBtn = true;
-                    navText.setText("학교 검색이 완료되었습니다.");
+                    if(schoolInfo != null){
+                        isClickedSearchBtn = true;
+                        navText.setText("학교 검색이 완료되었습니다.");
+                    }else{
+                        navText.setText("학교명을 올바르게 입력해주세요");
+                        Toast.makeText(getApplicationContext(), "학교명을 풀네임으로 입력해야 합니다.", Toast.LENGTH_SHORT);
+                    }
                     break;
             }
         }
@@ -188,6 +193,10 @@ public class SignUpActivity extends AppCompatActivity {
         String city = spinnerCity.getSelectedItem().toString();
         String sigungu = spinnerSigungu.getSelectedItem().toString();
 
+        if(isClickedSearchBtn == false){
+            startToast("학교 검색을 해주세요");
+        }
+        
         if (email.length() > 0 && password.length() > 0 && passwordCheck.length() > 0&& name.length() > 0 && school.length() > 0) {
 
             if (password.equals(passwordCheck)) {
@@ -309,7 +318,7 @@ public class SignUpActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "학교 정보를 받아오지 못했습니다", Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
