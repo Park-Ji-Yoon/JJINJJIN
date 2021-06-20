@@ -1,92 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity ="center"
-        android:fillViewport="true"
         android:layout_marginTop="0dp"
-        android:id="@+id/scrollView">
+        android:fillViewport="true"
+        android:gravity="center"
+        android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/top_alert"
+        <FrameLayout
+            android:id="@+id/top_alert"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <StackView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_height="250dp"
+                android:background="#4285F4" />
 
-                <StackView
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:background="#4285F4"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/mschool_txt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="학교이름"
-                    android:textSize="20sp"
-                    android:textColor="#ffffff"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="35dp"/>
+                    android:layout_marginTop="35dp"
+                    android:text="학교 이름"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/mloca_txt1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="XXX님, 안녕하세요"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="35dp"
+                    android:text="위치"
                     android:textColor="#ffffff"
-                    android:textSize="32sp"
-                    android:layout_marginTop="65dp"
-                    android:layout_marginLeft="30dp"/>
+                    android:textSize="13sp" />
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="240dp"
+                <TextView
+                    android:id="@+id/mloca_txt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="35dp"
+                    android:text="위치"
+                    android:textColor="#ffffff"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/mname_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="65dp"
+                android:text="XXX님, 안녕하세요"
+                android:textColor="#ffffff"
+                android:textSize="32sp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="240dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="130dp"
+                android:outlineAmbientShadowColor="#000000"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="130dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardUseCompatPadding="true"
-                    android:outlineAmbientShadowColor="#000000"
-                    app:cardElevation="5dp">
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/mdate_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:text="0000년 00월 00일 0요일"
+                        android:textSize="20sp" />
 
-                </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="150dp"
+                        <ImageView
+                            android:id="@+id/mweather_img"
+                            android:layout_width="170dp"
+                            android:layout_height="140dp"
+                            android:src="@drawable/s1r1" />
+
+                        <TextView
+                            android:id="@+id/mnow_temp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="50dp"
+                            android:text="00°C"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="390dp"
+                android:outlineAmbientShadowColor="#000000"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="390dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardUseCompatPadding="true"
-                    android:outlineAmbientShadowColor="#000000"
-                    app:cardElevation="5dp">
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/mtemp_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="00°C / 00°C\n강수 확률은 00%입니다."
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/mweather_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:text="👔 오늘의 코디?\n\t\t\t\t->"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="560dp"
+                android:layout_marginBottom="40dp"
+                android:outlineAmbientShadowColor="#000000"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true">
 
 
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="560dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardUseCompatPadding="true"
-                    android:outlineAmbientShadowColor="#000000"
-                    app:cardElevation="5dp"
-                    android:layout_marginBottom="40dp">
+            </androidx.cardview.widget.CardView>
 
 
-                </androidx.cardview.widget.CardView>
-
-
-            </FrameLayout>
+        </FrameLayout>
 
     </ScrollView>
 </LinearLayout>
