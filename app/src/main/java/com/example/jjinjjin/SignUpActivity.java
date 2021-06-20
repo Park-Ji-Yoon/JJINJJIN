@@ -2,6 +2,7 @@ package com.example.jjinjjin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ArrayAdapter<String> arrayAdapter;
     public static final String EXTRA_ADDRESS = "address";
 
+    Loading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class SignUpActivity extends AppCompatActivity {
         spinnerCity.setAdapter(arrayAdapter);
         spinnerSigungu = (Spinner)findViewById(R.id.spin_sigungu);
 
+        loading = new Loading(SignUpActivity.this);
+
         initAddressSpinner();
 
     }
@@ -76,6 +80,14 @@ public class SignUpActivity extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
+            loading.startLoadingDialog();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loading.dismissDialog();
+                }
+            }, 5000);
             switch(v.getId()){
                 // 회원가입 클릭 이벤트
                 case R.id.signUpButton:
@@ -95,6 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     };
+
     private void initAddressSpinner() {
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

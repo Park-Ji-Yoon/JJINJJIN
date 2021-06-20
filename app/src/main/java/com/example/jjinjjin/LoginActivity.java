@@ -2,6 +2,7 @@ package com.example.jjinjjin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        final Loading loading = new Loading(LoginActivity.this);
+
         findPw = findViewById(R.id.findPW);
         noAccount = findViewById(R.id.noAccount);
 
@@ -61,6 +64,15 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                loading.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading.dismissDialog();
+                    }
+                }, 5000);
+
                 String email = mEmailText.getText().toString().trim();
                 String pwd = mPasswordText.getText().toString().trim();
                 firebaseAuth.signInWithEmailAndPassword(email,pwd)
