@@ -1,5 +1,6 @@
 package com.example.jjinjjin;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -31,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -132,7 +133,6 @@ public class DishFragment extends Fragment {
                             }catch (NullPointerException e) {
                                 Log.d("NullPointerException", e.toString());
                             }
-                            Log.e("school : ", document.getData().get("school").toString());
                             edu[0] = document.getData().get("educode").toString();
                             cod[0] = document.getData().get("schoolcode").toString();
                             try {
@@ -159,6 +159,8 @@ public class DishFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     getStudentDish(edu[0], cod[0], 1);
+                    monday.setTextColor(Color.parseColor("#34A853"));
+                    monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -170,6 +172,8 @@ public class DishFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     getStudentDish(edu[0], cod[0], 2);
+                    tuesday.setTextColor(Color.parseColor("#34A853"));
+                    tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -179,21 +183,39 @@ public class DishFragment extends Fragment {
         wednesday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    getStudentDish(edu[0], cod[0], 3);
+                    wednesday.setTextColor(Color.parseColor("#34A853"));
+                    wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         thursday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    getStudentDish(edu[0], cod[0], 4);
+                    thursday.setTextColor(Color.parseColor("#34A853"));
+                    thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         friday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    getStudentDish(edu[0], cod[0], 5);
+                    friday.setTextColor(Color.parseColor("#34A853"));
+                    friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -206,8 +228,7 @@ public class DishFragment extends Fragment {
 
         final String[] output = new String[2];
 
-        Log.e("today : ", today);
-        Log.e("tomorrow : ", tomorrow);
+        Log.d("이거바", String.valueOf(weekday));
 
         String []w = weekCalendar(today);
         nowtempUrl = dish_url + "?Type=" + "json"
@@ -219,18 +240,78 @@ public class DishFragment extends Fragment {
                 + "&MLSV_FROM_YMD=" + w[weekday]
                 + "&MLSV_TO_YMD=" + w[weekday];
 
-        Log.d("더블유", Arrays.toString(w));
-        Log.d("스쿨 코드", school_code);
-        Log.d("교육청 코드", school_edu);
-        Log.d("유얼엘 : ", nowtempUrl);
+        switch(weekday){
+            case 1:
+                monday.setTextColor(Color.parseColor("#34A853"));
+                monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                tuesday.setTextColor(Color.parseColor("#ffffff"));
+                tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                wednesday.setTextColor(Color.parseColor("#ffffff"));
+                wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                thursday.setTextColor(Color.parseColor("#ffffff"));
+                thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                friday.setTextColor(Color.parseColor("#ffffff"));
+                friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                break;
+            case 2:
+                tuesday.setTextColor(Color.parseColor("#34A853"));
+                tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                monday.setTextColor(Color.parseColor("#ffffff"));
+                monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                wednesday.setTextColor(Color.parseColor("#ffffff"));
+                wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                thursday.setTextColor(Color.parseColor("#ffffff"));
+                thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                friday.setTextColor(Color.parseColor("#ffffff"));
+                friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                break;
+            case 3:
+                wednesday.setTextColor(Color.parseColor("#34A853"));
+                wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                monday.setTextColor(Color.parseColor("#ffffff"));
+                monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                tuesday.setTextColor(Color.parseColor("#ffffff"));
+                tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                thursday.setTextColor(Color.parseColor("#ffffff"));
+                thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                friday.setTextColor(Color.parseColor("#ffffff"));
+                friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                break;
+            case 4:
+                thursday.setTextColor(Color.parseColor("#34A853"));
+                thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                monday.setTextColor(Color.parseColor("#ffffff"));
+                monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                tuesday.setTextColor(Color.parseColor("#ffffff"));
+                tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                wednesday.setTextColor(Color.parseColor("#ffffff"));
+                wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                friday.setTextColor(Color.parseColor("#ffffff"));
+                friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                break;
+            case 5:
+                friday.setTextColor(Color.parseColor("#34A853"));
+                friday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish_white));
+                monday.setTextColor(Color.parseColor("#ffffff"));
+                monday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                tuesday.setTextColor(Color.parseColor("#ffffff"));
+                tuesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                wednesday.setTextColor(Color.parseColor("#ffffff"));
+                wednesday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                thursday.setTextColor(Color.parseColor("#ffffff"));
+                thursday.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.radius_dish));
+                break;
+            default:
+                break;
+        }
 
+        final String finalNowtempUrl = nowtempUrl;
+        Log.d("URL : ", finalNowtempUrl);
         StringRequest now_stringRequest = new StringRequest(Request.Method.POST, nowtempUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
-//                    https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=T10&SD_SCHUL_CODE=9296071&MLSV_FROM_YMD=20210411&MLSV_TO_YMD=20210413
                     JSONObject jsonResponse = new JSONObject(response);
-                    Log.d("급쉭", jsonResponse.toString());
                     JSONArray mealServiceDietInfo = jsonResponse.getJSONArray("mealServiceDietInfo");
                     JSONObject body = mealServiceDietInfo.getJSONObject(1);
                     JSONArray body_array = body.getJSONArray("row");
@@ -238,7 +319,6 @@ public class DishFragment extends Fragment {
                     String[] breakfast_arr = null;
                     String[] lunch_arr = null;
                     String[] dinner_arr = null;
-                    Log.d("랜트 : ", String.valueOf(body_array.length()));
                     switch(body_array.length()){
                         case 0:
                             break;
@@ -307,7 +387,6 @@ public class DishFragment extends Fragment {
                         }
                         dinner.setText(dinner_result);
                     }
-                    Log.d("점쉼", Arrays.toString(lunch_arr));
                 }catch(JSONException e) {
                     e.printStackTrace();
                 }
@@ -321,6 +400,7 @@ public class DishFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(now_stringRequest);
     }
+
     public String[] weekCalendar(String yyyymmdd) throws Exception{
 
         Calendar cal = Calendar.getInstance();

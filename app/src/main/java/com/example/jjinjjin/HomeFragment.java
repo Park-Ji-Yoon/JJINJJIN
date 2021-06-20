@@ -9,20 +9,18 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +31,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,6 +43,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -53,7 +55,9 @@ import jxl.read.biff.BiffException;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-import static com.example.jjinjjin.WeatherFragment.*;
+import static com.example.jjinjjin.WeatherFragment.GPS_ENABLE_REQUEST_CODE;
+import static com.example.jjinjjin.WeatherFragment.PERMISSIONS_REQUEST_CODE;
+import static com.example.jjinjjin.WeatherFragment.REQUIRED_PERMISSIONS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,6 +85,13 @@ public class HomeFragment extends Fragment {
     TextView mtemp_txt;
     TextView mweather_txt;
     ImageView mweather_img;
+
+    TextView breakfast;
+    TextView lunch;
+    TextView dinner;
+
+    String today;
+    String tomorrow;
 
     int cnt = 0;
 
@@ -122,6 +133,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        findSchoolInfo();
+
         if (!checkLocationServicesStatus()) {
 
             showDialogForLocationServiceSetting();
@@ -140,6 +153,17 @@ public class HomeFragment extends Fragment {
         mtemp_txt = view.findViewById(R.id.mtemp_txt);
         mweather_txt = view.findViewById(R.id.mweather_txt);
         mweather_img = view.findViewById(R.id.mweather_img);
+
+        breakfast = view.findViewById(R.id.breakfast);
+        lunch = view.findViewById(R.id.lunch);
+        dinner = view.findViewById(R.id.dinner);
+
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyyMMdd");
+        today = mFormat.format(cal.getTime());
+        cal.add(Calendar.DATE, 1);
+        tomorrow = mFormat.format(cal.getTime());
 
         String now_date = new SimpleDateFormat("yyyy년 MM월 dd일 E요일", Locale.KOREAN).format(new Date());
         mdate_txt.setText(now_date);
@@ -475,5 +499,222 @@ public class HomeFragment extends Fragment {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
+    }
+
+    public void findSchoolInfo(){
+        final String[] edu = new String[1];
+        final String[] cod = new String[1];
+
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+
+                            try{
+                                edu[0] = document.getData().get("eduCode").toString();
+                                cod[0] = document.getData().get("schoolCode").toString();
+                            }catch (NullPointerException e) {
+                                Log.d("NullPointerException", e.toString());
+                            }
+                            Log.e("school : ", document.getData().get("school").toString());
+                            edu[0] = document.getData().get("educode").toString();
+                            cod[0] = document.getData().get("schoolcode").toString();
+                            try {
+                                Calendar cal = Calendar.getInstance();
+                                int weekday = cal.get(Calendar.DAY_OF_WEEK) - 1;
+                                getStudentDish(edu[0], cod[0], weekday);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Log.d("else : ", "No such document1");
+                        }
+                    }else{
+                        Log.d("else : ", "No such document2");
+                    }
+                } else {
+                    Log.d("else : ", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void getStudentDish(String school_code, String school_edu, int weekday) throws Exception {
+        String nowtempUrl = "";
+        String dish_url = "https://open.neis.go.kr/hub/mealServiceDietInfo";
+
+        final String[] output = new String[2];
+
+        Log.e("today : ", today);
+        Log.e("tomorrow : ", tomorrow);
+
+        String []w = weekCalendar(today);
+        nowtempUrl = dish_url + "?Type=" + "json"
+                + "&pIndex=" + "1"
+                + "&pSize=" + "100"
+                + "&ATPT_OFCDC_SC_CODE=" + school_code
+                + "&SD_SCHUL_CODE=" + school_edu
+                + "&KEY=" + "7abd1b38b28943c0a64f7784516d3feb"
+                + "&MLSV_FROM_YMD=" + w[1]
+                + "&MLSV_TO_YMD=" + w[1];
+
+        Log.d("더블유", Arrays.toString(w));
+        Log.d("스쿨 코드", school_code);
+        Log.d("교육청 코드", school_edu);
+        Log.d("유얼엘 : ", nowtempUrl);
+
+        StringRequest now_stringRequest = new StringRequest(Request.Method.POST, nowtempUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+//                    https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=T10&SD_SCHUL_CODE=9296071&MLSV_FROM_YMD=20210411&MLSV_TO_YMD=20210413
+                    JSONObject jsonResponse = new JSONObject(response);
+                    Log.d("급쉭", jsonResponse.toString());
+                    JSONArray mealServiceDietInfo = jsonResponse.getJSONArray("mealServiceDietInfo");
+                    JSONObject body = mealServiceDietInfo.getJSONObject(1);
+                    JSONArray body_array = body.getJSONArray("row");
+
+                    String[] breakfast_arr = null;
+                    String[] lunch_arr = null;
+                    String[] dinner_arr = null;
+                    Log.d("랜트 : ", String.valueOf(body_array.length()));
+                    switch(body_array.length()){
+                        case 0:
+                            break;
+                        case 1:
+                            JSONObject obj = body_array.getJSONObject(0);
+
+                            if(obj.getString("MMEAL_SC_NM").equals("조식")){
+                                breakfast_arr = obj.getString("DDISH_NM").split("<br/>");
+                                lunch_arr = new String[]{"중식이 없습니다"};
+                                dinner_arr = new String[]{"석식이 없습니다"};
+                            }else if(obj.getString("MMEAL_SC_NM").equals("중식")){
+                                lunch_arr = obj.getString("DDISH_NM").split("<br/>");
+                                breakfast_arr = new String[]{"조식이 없습니다"};
+                                dinner_arr = new String[]{"석식이 없습니다"};
+                            }else if(obj.getString("MMEAL_SC_NM").equals("석식")){
+                                dinner_arr = obj.getString("DDISH_NM").split("<br/>");
+                                breakfast_arr = new String[]{"조식이 없습니다"};
+                                lunch_arr = new String[]{"중식이 없습니다"};
+                            }
+                            break;
+                        case 2:
+                            JSONObject obj0 = body_array.getJSONObject(0);
+                            JSONObject obj1 = body_array.getJSONObject(1);
+                            if(obj0.getString("MMEAL_SC_NM").equals("조식")){
+                                breakfast_arr = obj0.getString("DDISH_NM").split("<br/>");
+                                if(obj1.getString("MMEAL_SC_NM").equals("석식")) {
+                                    dinner_arr = obj1.getString("DDISH_NM").split("<br/>");
+                                }else {
+                                    lunch_arr = obj1.getString("DDISH_NM").split("<br/>");
+                                }
+                            }else if(obj0.getString("MMEAL_SC_NM").equals("중식")){
+                                lunch_arr = obj0.getString("DDISH_NM").split("<br/>");
+                                dinner_arr = obj1.getString("DDISH_NM").split("<br/>");
+                            }
+                            break;
+                        case 3:
+                            breakfast_arr = body_array.getJSONObject(0).getString("DDISH_NM").split("<br/>");
+                            lunch_arr = body_array.getJSONObject(1).getString("DDISH_NM").split("<br/>");
+                            dinner_arr = body_array.getJSONObject(2).getString("DDISH_NM").split("<br/>");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    String breakfast_result = "";
+                    String lunch_result = "";
+                    String dinner_result = "";
+
+                    if(breakfast_arr != null){
+                        for(int i=0; i<breakfast_arr.length; i++) {
+                            breakfast_result += breakfast_arr[i] + "\n";
+                        }
+                        breakfast.setText(breakfast_result);
+                    }
+
+                    if(lunch_arr != null) {
+                        for (int i = 0; i < lunch_arr.length; i++) {
+                            lunch_result += lunch_arr[i] + "\n";
+                        }
+                        lunch.setText(lunch_result);
+                    }
+
+                    if(dinner_arr != null) {
+                        for (int i = 0; i < dinner_arr.length; i++) {
+                            dinner_result += dinner_arr[i] + "\n";
+                        }
+                        dinner.setText(dinner_result);
+                    }
+                    Log.d("점쉼", Arrays.toString(lunch_arr));
+                }catch(JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(now_stringRequest);
+    }
+
+    public String[] weekCalendar(String yyyymmdd) throws Exception{
+
+        Calendar cal = Calendar.getInstance();
+        int toYear = 0;
+        int toMonth = 0;
+        int toDay = 0;
+        if(yyyymmdd == null || yyyymmdd.equals("")){   //파라메타값이 없을경우 오늘날짜
+            toYear = cal.get(cal.YEAR);
+            toMonth = cal.get(cal.MONTH)+1;
+            toDay = cal.get(cal.DAY_OF_MONTH);
+
+            int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
+
+            if(yoil != 1){   //해당요일이 일요일이 아닌경우
+                yoil = yoil-2;
+            }else{           //해당요일이 일요일인경우
+                yoil = 7;
+            }
+            cal.set(toYear, toMonth-1, toDay-yoil);  //해당주월요일로 세팅
+        }else{
+            int yy =Integer.parseInt(yyyymmdd.substring(0, 4));
+            int mm =Integer.parseInt(yyyymmdd.substring(4, 6))-1;
+            int dd =Integer.parseInt(yyyymmdd.substring(6, 8));
+            cal.set(yy, mm,dd);
+        }
+        String[] arrYMD = new String[7];
+
+        int inYear = cal.get(cal.YEAR);
+        int inMonth = cal.get(cal.MONTH);
+        int inDay = cal.get(cal.DAY_OF_MONTH);
+        int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
+        if(yoil != 1){   //해당요일이 일요일이 아닌경우
+            yoil = yoil-2;
+        }else{           //해당요일이 일요일인경우
+            yoil = 7;
+        }
+        inDay = inDay-yoil;
+        for(int i = 0; i < 7;i++){
+            cal.set(inYear, inMonth, inDay+i);  //
+            String y = Integer.toString(cal.get(cal.YEAR));
+            String m = Integer.toString(cal.get(cal.MONTH)+1);
+            String d = Integer.toString(cal.get(cal.DAY_OF_MONTH));
+            if(m.length() == 1) m = "0" + m;
+            if(d.length() == 1) d = "0" + d;
+
+            arrYMD[i] = y+m +d;
+            System.out.println("ymd ="+ y+m+d);
+
+        }
+
+        return arrYMD;
     }
 }

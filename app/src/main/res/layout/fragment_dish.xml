@@ -56,57 +56,72 @@
                 android:textColor="#ffffff"
                 android:textSize="24sp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/monday"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:text="월"
-                android:layout_marginTop="200dp"
-                android:background="#ffffff"/>
+                <Button
+                    android:id="@+id/monday"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="202dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/tuesday"
+                    android:background="@drawable/radius_dish"
+                    android:textColor="#ffffff"
+                    android:text="월" />
 
-            <Button
-                android:id="@+id/tuesday"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:text="화"
-                android:layout_marginTop="200dp"
-                android:background="#ffffff"/>
+                <Button
+                    android:id="@+id/tuesday"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="202dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/wednesday"
+                    android:background="@drawable/radius_dish"
+                    android:textColor="#ffffff"
+                    android:text="화" />
 
-            <Button
-                android:id="@+id/wednesday"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:text="수"
-                android:layout_marginTop="200dp"
-                android:background="#ffffff"/>
+                <Button
+                    android:id="@+id/wednesday"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="202dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/thursday"
+                    android:background="@drawable/radius_dish"
+                    android:textColor="#ffffff"
+                    android:text="수" />
 
-            <Button
-                android:id="@+id/thursday"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:text="목"
-                android:layout_marginTop="200dp"
-                android:background="#ffffff"/>
+                <Button
+                    android:id="@+id/thursday"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="202dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/friday"
+                    android:background="@drawable/radius_dish"
+                    android:textColor="#ffffff"
+                    android:text="목" />
 
-            <Button
-                android:id="@+id/friday"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:text="금"
-                android:layout_marginTop="200dp"
-                android:background="#ffffff"/>
+                <Button
+                    android:id="@+id/friday"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="202dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/radius_dish"
+                    android:textColor="#ffffff"
+                    android:text="금" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="300dp">
+                android:layout_height="300dp"
+                android:layout_marginTop="265dp"
+                android:layout_marginBottom="30dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -237,6 +252,22 @@
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="590dp"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                android:text="알레르기 정보"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="630dp"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:text="①난류, ②우유, ③메밀, ④땅콩, ⑤대두, ⑥밀, ⑦고등어, \n⑧게, ⑨새우, ⑩돼지고기, ⑪복숭아, ⑫토마토, ⑬아황산,\n⑭호두, ⑮닭고기, ⑯쇠고기, ⑰오징어, ⑱조개류,\n⑱굴, ⑱홍합, ⑱전복, ⑲잣"/>
 
         </FrameLayout>
 

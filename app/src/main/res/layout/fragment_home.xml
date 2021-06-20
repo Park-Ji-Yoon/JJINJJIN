@@ -162,19 +162,141 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="350dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="560dp"
-                android:layout_marginBottom="40dp"
-                android:outlineAmbientShadowColor="#000000"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="5dp"
-                app:cardUseCompatPadding="true">
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="570dp"
+                android:layout_marginBottom="30dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:orientation="horizontal">
 
-            </androidx.cardview.widget.CardView>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="270dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="270dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardUseCompatPadding="true"
+                        android:outlineAmbientShadowColor="#000000"
+                        app:cardElevation="5dp"
+                        android:layout_marginBottom="40dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="조식"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/breakfast"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="조식이 없습니다"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="270dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="350dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardUseCompatPadding="true"
+                        android:outlineAmbientShadowColor="#000000"
+                        app:cardElevation="5dp"
+                        android:layout_marginBottom="40dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="중식"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/lunch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="중식이 없습니다"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="270dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="520dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardUseCompatPadding="true"
+                        android:outlineAmbientShadowColor="#000000"
+                        app:cardElevation="5dp"
+                        android:layout_marginBottom="40dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="석식"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/dinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:text="석식이 없습니다"
+                                android:padding="10dp"
+                                android:textAlignment="center"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </HorizontalScrollView>
 
 
         </FrameLayout>

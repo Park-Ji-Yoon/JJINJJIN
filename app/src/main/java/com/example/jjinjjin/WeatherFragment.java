@@ -34,14 +34,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -52,13 +47,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
-import jxl.Image;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -66,11 +58,6 @@ import jxl.read.biff.BiffException;
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WeatherFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
