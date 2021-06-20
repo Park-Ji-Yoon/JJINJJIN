@@ -86,16 +86,11 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                     break;
                 // 학교 검색 버튼 클릭 이벤트    
-                case R.id.schoolSearchBtn: 
+                case R.id.schoolSearchBtn:
                     String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
                     schoolInfo = getSchoolCode(school);
-                    if(schoolInfo != null){
-                        isClickedSearchBtn = true;
-                        navText.setText("학교 검색이 완료되었습니다.");
-                    }else{
-                        navText.setText("학교명을 올바르게 입력해주세요");
-                        Toast.makeText(getApplicationContext(), "학교명을 풀네임으로 입력해야 합니다.", Toast.LENGTH_SHORT);
-                    }
+                    isClickedSearchBtn = true;
+                    navText.setText("학교 검색이 완료되었습니다.");
                     break;
             }
         }
@@ -188,15 +183,11 @@ public class SignUpActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
         String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
         String passwordCheck = ((EditText) findViewById(R.id.passwordCheckEditText)).getText().toString();
-        String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
-        String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
-        String city = spinnerCity.getSelectedItem().toString();
-        String sigungu = spinnerSigungu.getSelectedItem().toString();
+        final String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
+        final String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
+        final String city = spinnerCity.getSelectedItem().toString();
+        final String sigungu = spinnerSigungu.getSelectedItem().toString();
 
-        if(isClickedSearchBtn == false){
-            startToast("학교 검색을 해주세요");
-        }
-        
         if (email.length() > 0 && password.length() > 0 && passwordCheck.length() > 0&& name.length() > 0 && school.length() > 0) {
 
             if (password.equals(passwordCheck)) {
@@ -206,8 +197,26 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("SignUp","이메일 비번 저장성공");
-                                    // startToast("회원가입을 성공했습니다!");
-                                    //UI
+
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1], city, sigungu);
+
+                                    db.collection("users").document(mAuth.getCurrentUser().getUid())
+                                            .set(memberInfo.getHash())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("SignUp","회원정보 저장 성공");
+                                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("SignUp","회원정보 저장 실패");
+                                                }
+                                            });
                                 } else {
                                     if (task.getException() != null) {
                                         startToast(task.getException().toString());
@@ -221,27 +230,6 @@ public class SignUpActivity extends AppCompatActivity {
             } else {
                 startToast("비밀번호가 일치하지 않습니다.");
             }
-
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1], city, sigungu);
-
-            db.collection("users").document(user.getUid())
-                    .set(memberInfo.getHash())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("SignUp","회원정보 저장 성공");
-                            startMyActivity(MainActivity.class);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("SignUp","회원정보 저장 실패");
-                        }
-                    });
-
         }else{
             startToast("정보를 모두 입력해 주세요.");
         }
@@ -318,7 +306,7 @@ public class SignUpActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "학교 정보를 받아오지 못했습니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
