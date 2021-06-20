@@ -1,15 +1,21 @@
 package com.example.jjinjjin;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -28,6 +34,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,14 +52,19 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import jxl.Image;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+
+import static android.content.Context.LOCATION_SERVICE;
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +83,9 @@ public class WeatherFragment extends Fragment {
     private String mParam2;
 
     View view;
+    TextView school_txt;
+    TextView loca_txt1;
+    TextView loca_txt2;
     TextView date_txt;
     TextView now_temp;
     TextView temp_txt;
@@ -69,8 +94,13 @@ public class WeatherFragment extends Fragment {
     ImageButton location_btn;
     ImageButton school_btn;
 
-    private LocationManager locationManager;
-    private static final int REQUEST_CODE_LOCATION = 2;
+    int cnt = 0;
+
+    private GpsTracker gpsTracker;
+
+    public static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    public static final int PERMISSIONS_REQUEST_CODE = 100;
+    public static String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -108,6 +138,16 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_weather, container, false);
 
+        if (!checkLocationServicesStatus()) {
+            showDialogForLocationServiceSetting();
+        }else {
+            checkRunTimePermission();
+        }
+
+        school_txt = view.findViewById(R.id.school_txt);
+        SetSchoolN();
+        loca_txt1 = view.findViewById(R.id.loca_txt1);
+        loca_txt2 = view.findViewById(R.id.loca_txt2);
         date_txt = view.findViewById(R.id.date_txt);
         now_temp = view.findViewById(R.id.now_temp);
         temp_txt = view.findViewById(R.id.temp_txt);
@@ -116,56 +156,195 @@ public class WeatherFragment extends Fragment {
         location_btn = view.findViewById(R.id.location_btn);
         school_btn = view.findViewById(R.id.school_btn);
 
+
         String now_date = new SimpleDateFormat("yyyy년 MM월 dd일 E요일", Locale.KOREAN).format(new Date());
         date_txt.setText(now_date);
 
-//        locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
-//
-//        Location userLocation = FindLocation();
-//        double latitude = userLocation.getLatitude();
-//        double longitude = userLocation.getLongitude();
-//
-//        Log.d("1현 위치 : ", latitude + "," + longitude + "");
-//
-        int[] findxy = FindXY(1, 1);
+        int[] findxy = FindXYL();
         getWeather(String.valueOf(findxy[0]), String.valueOf(findxy[1]));
+
+        location_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cnt = 0;
+
+                school_btn.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                school_btn.setImageResource(R.drawable.school_yello);
+                location_btn.setBackgroundColor(Color.parseColor("#FBBC07"));
+                location_btn.setImageResource(R.drawable.location_white);
+
+                int[] findxyl = FindXYL();
+                getWeather(String.valueOf(findxyl[0]), String.valueOf(findxyl[1]));
+            }
+        });
+
+        school_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cnt += 1;
+
+                school_btn.setBackgroundColor(Color.parseColor("#FBBC07"));
+                school_btn.setImageResource(R.drawable.school_white);
+                location_btn.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                location_btn.setImageResource(R.drawable.location_yello);
+
+                int[] findxys = FindXYS();
+                getWeather(String.valueOf(findxys[0]), String.valueOf(findxys[1]));
+
+                if(cnt == 1){
+                    Toast.makeText(getContext(), "1번 더 클릭!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grandResults) {
 
-    private Location FindLocation() {
-        Location currentLocation = null;
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this.REQUEST_CODE_LOCATION);
-            FindLocation();
-        }
-        else {
-            String locationProvider = LocationManager.GPS_PROVIDER;
-            currentLocation = locationManager.getLastKnownLocation(locationProvider);
-        }
-        return currentLocation;
-    }
-
-    private int[] FindXY(double x, double y) {
-        int[] resultxy = {0, 0};
-        String resultloca = "";
-
-        final Geocoder geocoder = new Geocoder(getContext(), Locale.KOREAN);
-        List<Address> list = null;
-        try{
-            list = geocoder.getFromLocation(
-                    37.4663, // 위도
-                    126.9329, // 경도
-                    1); // 얻어올 값의 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (list != null) {
-            if (list.size()!=0) {
-                resultloca = list.get(0).getThoroughfare();
+        if ( permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
+            boolean check_result = true;
+            for (int result : grandResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    check_result = false;
+                    break;
+                }
+            }
+            if ( check_result ) {
+            }
+            else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[0])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[1])) {
+                    Toast.makeText(view.getContext(), "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.", Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                }else {
+                    Toast.makeText(view.getContext(), "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다. ", Toast.LENGTH_LONG).show();
+                }
             }
         }
+    }
+
+    void checkRunTimePermission(){
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[0])) {
+                Toast.makeText(view.getContext(), "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            }
+        }
+    }
+
+    public String getCurrentAddress( double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(view.getContext(), Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(
+                    latitude,
+                    longitude,
+                    7);
+        } catch (IOException ioException) {
+            //네트워크 문제
+            Toast.makeText(view.getContext(), "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Toast.makeText(view.getContext(), "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 GPS 좌표";
+        }
+        if (addresses == null || addresses.size() == 0) {
+            Toast.makeText(view.getContext(), "주소 미발견", Toast.LENGTH_LONG).show();
+            return "주소 미발견";
+        }
+        Address address = addresses.get(0);
+        return address.getAddressLine(0).toString()+"\n";
+
+    }
+
+    private void showDialogForLocationServiceSetting() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("위치 서비스 비활성화");
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 수정하실래요?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent callGPSSettingIntent
+                        = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case GPS_ENABLE_REQUEST_CODE:
+                if (checkLocationServicesStatus()) {
+                    if (checkLocationServicesStatus()) {
+                        Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
+                        checkRunTimePermission();
+                        return;
+                    }
+                }
+                break;
+        }
+    }
+
+    public boolean checkLocationServicesStatus() {
+        LocationManager locationManager = (LocationManager)getActivity().getSystemService(LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    public void SetSchoolN(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //현재 유저의 정보 빼와야함
+                                if(document.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                    school_txt.setText(document.getString("school"));
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public int[] FindXYL() {
+        int[] locaxyl = {0,0};
+        String null_str = "no_location";
+
+        gpsTracker = new GpsTracker(view.getContext());
+
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+
+        String address = getCurrentAddress(latitude, longitude);
+        String[] add_list = address.split(" ");
+        loca_txt1.setText(add_list[1]);
+        loca_txt2.setText(add_list[2]);
 
         try{
             Workbook wb = Workbook.getWorkbook(getActivity().getBaseContext().getResources().getAssets().open("location.xls"));
@@ -176,10 +355,10 @@ public class WeatherFragment extends Fragment {
                     int rowTotal = sheet.getRows();
 
                     for (int row = 1; row < rowTotal; row++) {
-                        if (resultloca.equals(sheet.getCell(2, row).getContents())) {
-                            resultxy[0] = Integer.parseInt(sheet.getCell(3, row).getContents());
-                            resultxy[1] = Integer.parseInt(sheet.getCell(4, row).getContents());
-                            Log.d("시트 오류 : ", "찾을 수 없음");
+                        if (loca_txt1.getText().toString().equals(sheet.getCell(0, row).getContents().trim()) && loca_txt2.getText().toString().equals(sheet.getCell(1, row).getContents().trim()) && null_str.trim().equals(sheet.getCell(2, row).getContents().trim())) {
+                            locaxyl[0] = Integer.parseInt(sheet.getCell(3, row).getContents());
+                            locaxyl[1] = Integer.parseInt(sheet.getCell(4, row).getContents());
+                            break;
                         }
                     }
                 } else {
@@ -193,14 +372,73 @@ public class WeatherFragment extends Fragment {
         } catch (BiffException e) {
             e.printStackTrace();
         }
-        return resultxy;
+        return locaxyl;
+    }
+
+    public void SetSchoolLoca(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //현재 유저의 정보 빼와야함
+                                if(document.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                    loca_txt1.setText(document.getString("city"));
+                                    loca_txt2.setText(document.getString("sigungu"));
+                                    break;
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public int[] FindXYS() {
+        SetSchoolLoca();
+
+        int[] locaxys = {0,0};
+        String null_str = "no_location";
+
+        try{
+            Workbook wb = Workbook.getWorkbook(getActivity().getBaseContext().getResources().getAssets().open("location.xls"));
+
+            if(wb != null) {
+                Sheet sheet = wb.getSheet(0);
+                if (sheet != null) {
+                    int rowTotal = sheet.getRows();
+
+                    for (int row = 1; row < rowTotal; row++) {
+                        if (loca_txt1.getText().toString().equals(sheet.getCell(0, row).getContents().trim()) && loca_txt2.getText().toString().equals(sheet.getCell(1, row).getContents().trim()) && null_str.trim().equals(sheet.getCell(2, row).getContents().trim())) {
+                            locaxys[0] = Integer.parseInt(sheet.getCell(3, row).getContents());
+                            locaxys[1] = Integer.parseInt(sheet.getCell(4, row).getContents());
+                            break;
+                        }
+                    }
+                } else {
+                    Log.d("시트 오류 : ", "찾을 수 없음");
+                }
+            }else{
+                Log.d("엑셀 오류 : ", "찾을 수 없음");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        }
+        return locaxys;
     }
 
     public void  getWeather(String x, String y) {
         final String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst?serviceKey=FXg%2Ft9dxkuprU0w78fsjMQ6UuJka073zQlNU1CPrvzyR1ktiy4Pg7BbitEdn%2FwYeaVJ6oZmiJdgFuKeBVMqO2g%3D%3D&pageNo=1&numOfRows=62&dataType=JSON&base_date=";
         String ymd = "";
-        final String url_end08 = "&base_time=2000&nx=" + x + "&ny=" + y;
-        final String url_end924 = "&base_time=0200&nx=" + x + "&ny=" + y;
+        String url_end08 = "&base_time=2000&nx=" + x + "&ny=" + y;
+        String url_end924 = "&base_time=0200&nx=" + x + "&ny=" + y;
         String weatherUrl = "";
 
         final int nowH = Integer.parseInt(new SimpleDateFormat("H").format(new Date(System.currentTimeMillis())));
@@ -212,7 +450,6 @@ public class WeatherFragment extends Fragment {
             ymd = new SimpleDateFormat("yyyyMMdd").format(new Date());
             weatherUrl = url + ymd + url_end924;
         }
-
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, weatherUrl, new Response.Listener<String>() {
             @Override

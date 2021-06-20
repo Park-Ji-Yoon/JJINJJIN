@@ -181,6 +181,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp(){
         String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
+
         String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
         String passwordCheck = ((EditText) findViewById(R.id.passwordCheckEditText)).getText().toString();
         final String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
