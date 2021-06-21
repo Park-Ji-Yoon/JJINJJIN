@@ -42,9 +42,7 @@ public class PersonalFragment extends Fragment {
     TextView name;
     TextView school;
 
-    Button accountBtn;
     Button schoolBtn;
-    Button alarmBtn;
     Button logoutBtn;
     Button leaveBtn;
 
@@ -77,9 +75,7 @@ public class PersonalFragment extends Fragment {
         name = view.findViewById(R.id.name);
         school = view.findViewById(R.id.school);
 
-        accountBtn = view.findViewById(R.id.accountBtn);
         schoolBtn = view.findViewById(R.id.schoolBtn);
-        alarmBtn = view.findViewById(R.id.alarmBtn);
         logoutBtn = view.findViewById(R.id.logoutBtn);
         leaveBtn = view.findViewById(R.id.leaveBtn);
 
@@ -107,14 +103,6 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-        accountBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AccountActivity.class);
-                startActivity(intent);
-            }
-        });
-
         schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,13 +112,6 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-        alarmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AlarmActivity.class);
-                startActivity(intent);
-            }
-        });
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

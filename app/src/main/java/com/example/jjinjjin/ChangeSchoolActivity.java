@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,7 +61,7 @@ public class ChangeSchoolActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String previous = intent.getExtras().getString("previous_school");
-        previous_school.setText(previous);
+        previous_school.setText("이전 학교 : " + previous);
 
         schoolSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +69,7 @@ public class ChangeSchoolActivity extends AppCompatActivity {
                 school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
                 new_school_code = getSchoolCode(school);
                 isClickedSearchBtn = true;
-                new_school.setText(school);
+                new_school.setText("재설정한 학교 : " + school);
                 navText.setText("학교 검색이 완료되었습니다.");
             }
         });
@@ -76,17 +78,18 @@ public class ChangeSchoolActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(isClickedSearchBtn == true){
-                    boolean isUpdated = updateSchool(school);
-                    if(isUpdated){
-                        String s = String.format("%s로 재설정 완료", school);
-                        success.setText(s);
-                    }
+                    updateSchool(school);
+
+                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                    startActivity(intent);
                 }else{
                     Toast.makeText(getApplicationContext(), "학교 검색읗 해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+    @Override
+    public void onBackPressed() {}
 
     public String getSchoolCode(String schoolName){
         String nowtempUrl = "";
@@ -126,8 +129,7 @@ public class ChangeSchoolActivity extends AppCompatActivity {
         return school_code[0];
     }
     
-    public boolean updateSchool(String school){
-        final boolean[] success = {false};
+    public void updateSchool(String school){
         DocumentReference washingtonRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         washingtonRef
                 .update("school", school)
@@ -135,7 +137,6 @@ public class ChangeSchoolActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getApplicationContext(), "학교 재설정이 완료되었습니다", Toast.LENGTH_SHORT).show();
-                        success[0] = true;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -144,6 +145,5 @@ public class ChangeSchoolActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "학교 재설정에 실패했습니다", Toast.LENGTH_SHORT).show();
                     }
                 });
-        return success[0];
     }
 }

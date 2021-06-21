@@ -22,4 +22,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
     }
+
+    @Override
+    public void onBackPressed() {}
 }

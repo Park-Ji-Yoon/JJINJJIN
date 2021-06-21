@@ -2,7 +2,6 @@ package com.example.jjinjjin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,8 +44,6 @@ public class SignUpActivity extends AppCompatActivity {
     private ArrayAdapter<String> arrayAdapter;
     public static final String EXTRA_ADDRESS = "address";
 
-    Loading loading;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,21 +56,15 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.signUpButton).setOnClickListener(onClickListener);
         findViewById(R.id.schoolSearchBtn).setOnClickListener(onClickListener);
         navText = findViewById(R.id.navText);
+
         spinnerCity = (Spinner)findViewById(R.id.spin_city);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, (String[])getResources().getStringArray(R.array.spinner_region));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(arrayAdapter);
-
         spinnerSigungu = (Spinner)findViewById(R.id.spin_sigungu);
-        spinnerSigungu = (Spinner)findViewById(R.id.spin_sigungu);
-
-        loading = new Loading(SignUpActivity.this);
 
         initAddressSpinner();
 
-        findViewById(R.id.signUpButton).setOnClickListener(onClickListener);
-        findViewById(R.id.schoolSearchBtn).setOnClickListener(onClickListener);
-        navText = findViewById(R.id.navText);
     }
     @Override
     public void onStart() {
@@ -85,32 +76,6 @@ public class SignUpActivity extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-//            if (spinnerCity.getSelectedItemPosition() == 0) {
-//                startToast(getApplicationContext()+"행정 구역 주소를 입력해주세요");
-//            }
-//            else {
-//                Intent data = new Intent();
-//
-//                if(spinnerDong.getSelectedItem() != null) {
-//                    String address = spinnerCity.getSelectedItem().toString() + " " + spinnerSigungu.getSelectedItem().toString() + " " + spinnerDong.getSelectedItem().toString();
-//                    data.putExtra(EXTRA_ADDRESS, address);
-//                } else {
-//                    String address = spinnerCity.getSelectedItem().toString() + " " + spinnerSigungu.getSelectedItem().toString();
-//                    data.putExtra(EXTRA_ADDRESS, address);
-//                }
-//
-//                setResult(RESULT_OK, data);
-//                finish();
-//            }
-            loading.startLoadingDialog();
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loading.dismissDialog();
-                }
-            }, 5000);
-
             switch(v.getId()){
                 // 회원가입 클릭 이벤트
                 case R.id.signUpButton:
@@ -120,8 +85,8 @@ public class SignUpActivity extends AppCompatActivity {
                         startToast("학교 검색을 해야 합니다.");
                     }
                     break;
-                // 학교 검색 버튼 클릭 이벤트    
-                case R.id.schoolSearchBtn: 
+                // 학교 검색 버튼 클릭 이벤트
+                case R.id.schoolSearchBtn:
                     String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
                     schoolInfo = getSchoolCode(school);
                     isClickedSearchBtn = true;
@@ -212,8 +177,11 @@ public class SignUpActivity extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSigungu.setAdapter(arrayAdapter);
     }
+
+
     private void signUp(){
         String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
+
         String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
         String passwordCheck = ((EditText) findViewById(R.id.passwordCheckEditText)).getText().toString();
         final String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
@@ -230,8 +198,26 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("SignUp","이메일 비번 저장성공");
-                                    // startToast("회원가입을 성공했습니다!");
-                                    //UI
+
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1], city, sigungu);
+
+                                    db.collection("users").document(mAuth.getCurrentUser().getUid())
+                                            .set(memberInfo.getHash())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("SignUp","회원정보 저장 성공");
+                                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("SignUp","회원정보 저장 실패");
+                                                }
+                                            });
                                 } else {
                                     if (task.getException() != null) {
                                         startToast(task.getException().toString());
@@ -245,27 +231,6 @@ public class SignUpActivity extends AppCompatActivity {
             } else {
                 startToast("비밀번호가 일치하지 않습니다.");
             }
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1], city, sigungu);
-
-            db.collection("users").document(mAuth.getCurrentUser().getUid())
-                    .set(memberInfo.getHash())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("SignUp","회원정보 저장 성공");
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("SignUp","회원정보 저장 실패");
-                        }
-                    });
-
         }else{
             startToast("정보를 모두 입력해 주세요.");
         }
@@ -309,7 +274,7 @@ public class SignUpActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-    
+
     // 학교명 매개변수로 받아서 학교, 교육청 코드 return하는 메서드
     public String[] getSchoolCode(String schoolName){
         String nowtempUrl = "";

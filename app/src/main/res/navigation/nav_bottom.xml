@@ -9,11 +9,11 @@
         android:name="com.example.jjinjjin.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
-    <fragment
-        android:id="@+id/scheduleFragment"
-        android:name="com.example.jjinjjin.ScheduleFragment"
+    <activity
+        android:id="@+id/todoActivity"
+        android:name="com.example.jjinjjin.ToDoActivity"
         android:label="fragment_schedule"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/activity_to_do" />
     <fragment
         android:id="@+id/weatherFragment"
         android:name="com.example.jjinjjin.WeatherFragment"
