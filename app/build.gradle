@@ -4,6 +4,11 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
+
     defaultConfig {
         applicationId "com.example.jjinjjin"
         minSdkVersion 17
@@ -27,6 +32,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:27.0.0')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.google.firebase:firebase-database:20.0.0'
     compile 'com.android.support:multidex:1.0.3'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -51,7 +57,9 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.2'
 
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.firebaseui:firebase-ui-database:4.3.2'
+
+
     // bottom navigation bar
 //    implementation 'com.google.android.material:material:1.0.0'}
 //    implementation 'com.google.android.material:material:1.2.1'

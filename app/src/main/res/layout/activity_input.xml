@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".InputActivity">
+
+    <EditText
+        android:id="@+id/edit_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Task"
+        android:layout_margin="16dp"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/edit_priority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="1"
+        android:layout_margin="16dp"
+        android:inputType="number"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Task"/>
+
+</LinearLayout>
