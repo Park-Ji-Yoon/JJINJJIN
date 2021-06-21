@@ -41,6 +41,12 @@ public class SignUpActivity extends AppCompatActivity {
     String[] schoolInfo = {"", ""};
     boolean isClickedSearchBtn = false;
     TextView navText;
+    private Spinner spinnerCity, spinnerSigungu;
+    private ArrayAdapter<String> arrayAdapter;
+    public static final String EXTRA_ADDRESS = "address";
+
+    Loading loading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +56,18 @@ public class SignUpActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        findViewById(R.id.signUpButton).setOnClickListener(onClickListener);
+        findViewById(R.id.schoolSearchBtn).setOnClickListener(onClickListener);
+        navText = findViewById(R.id.navText);
         spinnerCity = (Spinner)findViewById(R.id.spin_city);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, (String[])getResources().getStringArray(R.array.spinner_region));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(arrayAdapter);
 
         spinnerSigungu = (Spinner)findViewById(R.id.spin_sigungu);
-        spinnerDong = (Spinner)findViewById(R.id.spin_dong);
+        spinnerSigungu = (Spinner)findViewById(R.id.spin_sigungu);
+
+        loading = new Loading(SignUpActivity.this);
 
         initAddressSpinner();
 
@@ -91,6 +102,15 @@ public class SignUpActivity extends AppCompatActivity {
 //                setResult(RESULT_OK, data);
 //                finish();
 //            }
+            loading.startLoadingDialog();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loading.dismissDialog();
+                }
+            }, 5000);
+
             switch(v.getId()){
                 // 회원가입 클릭 이벤트
                 case R.id.signUpButton:
@@ -110,12 +130,96 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     };
+    private void initAddressSpinner() {
+        spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // 시군구, 동의 스피너를 초기화한다.
+                switch (position) {
+                    case 0:
+                        spinnerSigungu.setAdapter(null);
+                        break;
+                    case 1:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_seoul);
+                        break;
+                    case 2:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_busan);
+                        break;
+                    case 3:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_daegu);
+                        break;
+                    case 4:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_incheon);
+                        break;
+                    case 5:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_gwangju);
+                        break;
+                    case 6:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_daejeon);
+                        break;
+                    case 7:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_ulsan);
+                        break;
+                    case 8:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_sejong);
+                        break;
+                    case 9:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_gyeonggi);
+                        break;
+                    case 10:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_gangwon);
+                        break;
+                    case 11:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_chung_buk);
+                        break;
+                    case 12:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_chung_nam);
+
+                        break;
+                    case 13:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_jeon_buk);
+                        break;
+                    case 14:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_jeon_nam);
+                        break;
+                    case 15:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_gyeong_buk);
+                        break;
+                    case 16:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_gyeong_nam);
+                        break;
+                    case 17:
+                        setSigunguSpinnerAdapterItem(R.array.spinner_region_jeju);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setSigunguSpinnerAdapterItem(int array_resource) {
+        if (arrayAdapter != null) {
+            spinnerSigungu.setAdapter(null);
+            arrayAdapter = null;
+        }
+
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, (String[])getResources().getStringArray(array_resource));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSigungu.setAdapter(arrayAdapter);
+    }
     private void signUp(){
         String email = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
         String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
         String passwordCheck = ((EditText) findViewById(R.id.passwordCheckEditText)).getText().toString();
-        String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
-        String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
+        final String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString();
+        final String school = ((EditText)findViewById(R.id.schoolEditText)).getText().toString();
+        final String city = spinnerCity.getSelectedItem().toString();
+        final String sigungu = spinnerSigungu.getSelectedItem().toString();
 
         if (email.length() > 0 && password.length() > 0 && passwordCheck.length() > 0&& name.length() > 0 && school.length() > 0) {
 
@@ -142,17 +246,17 @@ public class SignUpActivity extends AppCompatActivity {
                 startToast("비밀번호가 일치하지 않습니다.");
             }
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1]);
+            MemberInfo memberInfo = new MemberInfo(name, school, schoolInfo[0], schoolInfo[1], city, sigungu);
 
-            db.collection("users").document(user.getUid())
+            db.collection("users").document(mAuth.getCurrentUser().getUid())
                     .set(memberInfo.getHash())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("SignUp","회원정보 저장 성공");
-                            startMyActivity(MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -174,7 +278,7 @@ public class SignUpActivity extends AppCompatActivity {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            MemberInfo memberInfo = new MemberInfo(name, school,"0", "0");
+            MemberInfo memberInfo = new MemberInfo(name, school,"0", "0", "0", "0");
 
             if(user != null){
                 db.collection("users").document(user.getUid()).set(memberInfo)
