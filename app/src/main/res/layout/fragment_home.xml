@@ -128,7 +128,7 @@
                 android:layout_width="350dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="390dp"
+                android:layout_marginTop="380dp"
                 android:outlineAmbientShadowColor="#000000"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
@@ -165,7 +165,7 @@
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="570dp"
+                android:layout_marginTop="550dp"
                 android:layout_marginBottom="30dp">
 
                 <LinearLayout
