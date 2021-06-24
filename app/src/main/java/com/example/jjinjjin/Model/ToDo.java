@@ -10,6 +10,7 @@ public class ToDo {
     public ToDo(String task, String priority){
         this.task = task;
         this.priority = priority;
+
     }
     public String getTask() {
         return task;
