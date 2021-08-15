@@ -1,4 +1,4 @@
-# 친친
+# 친친 (JJINJJIN)
 > 학생의 학교생활을 도와주는 앱
 
 <!-- [![NPM Version][npm-image]][npm-url]
